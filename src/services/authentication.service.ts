@@ -2,7 +2,6 @@
 import * as jwt from 'jsonwebtoken';
 import User from '../models/user.model'
 import DataStoredInToken from '../interfaces/dataStoredInToken';
-import TokenData from '../interfaces/tokenData.interface';
 
 export default class AuthenticationService {
 
