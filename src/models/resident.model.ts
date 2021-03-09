@@ -3,8 +3,9 @@
 // Base Model
 import { Model } from 'objection';
 
-export default class ResidentIdentity extends Model {
+export default class Resident extends Model {
 
+  id: number
   nomor: string
   nama: string
   tempat_lahir: string
@@ -27,7 +28,7 @@ export default class ResidentIdentity extends Model {
 
   static jsonSchema = {
     type: 'object',
-    required: ['code','name'],
+    required: ['nomor','nama'],
 
     properties: {
       id: { type: 'integer' },
