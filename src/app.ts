@@ -2,16 +2,17 @@
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { Model } from 'objection';
-import express, {Application, Request, Response} from 'express';
-import { errorHandler } from "./middlewares/error.middleware";
-import { notFoundHandler } from "./middlewares/notfound.middleware";
-
-// Services
-import ResidentIdentityService from './services/residentIdentity.service'
+import express, {Application} from 'express';
+import errorHandler from "./middlewares/error.middleware";
+import notFoundHandler from "./middlewares/notfound.middleware";
 
 // Configs
 import knex from './configs/db.config';
 import appConfig from './configs/app.config';
+
+// Routes
+import ResidentRoutes from './routes/resident.route';
+import AuthRoutes from './routes/authentication.route';
 
 // Define variables
 const app: Application = express();
@@ -28,26 +29,30 @@ app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-router.get('/identity/:nomor', async (req: Request, res: Response) => {
-  try {
-    const residentIdentityService = new ResidentIdentityService();
-    const identity = await residentIdentityService.getIdentity(req);
-    // return success response
-    return res.status(200).send({ status: 'success', message: '', data: identity });
-  } catch(err) {
-    // return error respose
-    throw new Error();
-  }
-});
-
 // use express router
 app.use('/api/v1', router);
+router.use('/resident', ResidentRoutes);
+router.use('/auth', AuthRoutes);
 
 // use error handling
 app.use(errorHandler);
 app.use(notFoundHandler);
 
 // listen server
-app.listen(port, () => {
-    return console.log(`server is listening on ${port}`);
+const server = app.listen(port, () => {
+  return console.log(`server is listening on ${port}`);
 });
+
+function handleShutdownGracefully() {
+  console.info("closing server gracefully...");
+  server.close(() => {
+      console.info("server closed.");
+      // close db connections
+      knex.destroy();
+      process.exit(0);
+  });
+}
+process.on('uncaughtException', handleShutdownGracefully);
+process.on("SIGINT", handleShutdownGracefully);
+process.on("SIGTERM", handleShutdownGracefully);
+process.on("SIGHUP", handleShutdownGracefully);

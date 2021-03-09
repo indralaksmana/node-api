@@ -13,8 +13,8 @@ const knex = Knex({
   },
   debug: true, // change this value to "true". If you want to enable debug mode.
   pool: {
-    min: 1,
-    max: 20,
+    min: 5,
+    max: 30,
     afterCreate: (conn: any, done: any) => {
       conn.query('SET time_zone="UTC";', (err: any)=>{
         if (err) {
