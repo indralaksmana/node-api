@@ -9,7 +9,8 @@ const knex = Knex({
     host: appConfig.db.host,
     user: appConfig.db.user,
     password: appConfig.db.password,
-    database: appConfig.db.database
+    database: appConfig.db.database,
+    port: parseInt(appConfig.db.port)
   },
   debug: true, // change this value to "true". If you want to enable debug mode.
   pool: {
