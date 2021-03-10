@@ -12,7 +12,7 @@ const knex = Knex({
     database: appConfig.db.database,
     port: parseInt(appConfig.db.port)
   },
-  debug: true, // change this value to "true". If you want to enable debug mode.
+  debug: false, // change this value to "true". If you want to enable debug mode.
   pool: {
     min: 5,
     max: 30,
